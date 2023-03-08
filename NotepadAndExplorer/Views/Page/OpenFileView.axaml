@@ -24,9 +24,9 @@
 		<ListBox Grid.Row="0" Items="{Binding dirAndFiles}" SelectedItem="{Binding SelectedFileEntity}">
 		</ListBox>
 		<Grid Grid.Row="1" ColumnDefinitions="*, *" RowDefinitions="*, *">
-			<TextBox Grid.Row="0" Grid.ColumnSpan="2" Text=""/>
-			<Button Classes="B1" Grid.Column="0" Grid.Row="1" Content="Open" Command="{Binding OpenCommand}"/>
-			<Button Classes="B1" Grid.Column="1" Grid.Row="1" Content="Cancel" Command="{Binding CancelCommand}" />
+			<TextBox Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding FileNamePath}"/>
+			<Button Classes="B1" Grid.Column="0" Grid.Row="1" Content="{Binding ButtonContent}" Command="{Binding OpenCommand}"/>
+			<Button Classes="B1" Grid.Column="1" Grid.Row="1" Content="Отмена" Command="{Binding CancelCommand}" />
 		</Grid>
 	</Grid>
 </UserControl>

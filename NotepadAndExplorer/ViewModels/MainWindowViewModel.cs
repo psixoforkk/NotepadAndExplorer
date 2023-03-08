@@ -18,6 +18,7 @@ namespace NotepadAndExplorer.ViewModels
     {
         private ViewModelBase content;
         private NotepadViewModel notepadViewModel;
+        private string fileText;
         public ReactiveCommand<Unit, Unit> SwitchToOpenFileViewModel { get; }
         public ReactiveCommand<Unit, Unit> SwitchToSaveFileViewModel { get; }
         public MainWindowViewModel()
@@ -27,30 +28,39 @@ namespace NotepadAndExplorer.ViewModels
 
             SwitchToSaveFileViewModel = ReactiveCommand.Create(() =>
             {
-                OpenFileViewModel openFileViewModel = new OpenFileViewModel();
+                OpenFileViewModel openFileViewModel = new OpenFileViewModel(1);
                 Content = openFileViewModel;
                 Observable.Merge(
                     openFileViewModel.OpenCommand,
                     openFileViewModel.CancelCommand).Subscribe(
                     cringe =>
                     {
-                        if (cringe == 0)
+                        if (cringe == string.Empty)
                         {
                             Content = notepadViewModel;
                         }
-
+                        if (cringe != string.Empty && cringe != "#.#.#")
+                        {
+                            string newFileText = FileText;
+                            File.WriteAllText(cringe, newFileText);
+                        }
                     }
                 );
             });
             SwitchToOpenFileViewModel = ReactiveCommand.Create(() =>
             {
-                OpenFileViewModel openFileViewModel = new OpenFileViewModel();
+                OpenFileViewModel openFileViewModel = new OpenFileViewModel(0);
                 Observable.Merge (
                     openFileViewModel.OpenCommand,
                     openFileViewModel.CancelCommand).Subscribe (
                     cringe =>
                         {
-                            if (cringe == 0)
+                            if (cringe != "#.#.#" && cringe != string.Empty)
+                            {
+                                FileText = cringe;
+                                Content = notepadViewModel;
+                            }
+                            if (cringe == string.Empty)
                             {
                                 Content = notepadViewModel;
                             }
@@ -59,6 +69,12 @@ namespace NotepadAndExplorer.ViewModels
                     );
                 Content = openFileViewModel;
             });
+        }
+
+        public string FileText
+        {
+            get { return fileText; }
+            set { this.RaiseAndSetIfChanged(ref fileText, value); }
         }
         public ViewModelBase Content
         {
