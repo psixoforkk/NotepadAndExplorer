@@ -1,16 +1,9 @@
-using Avalonia.Controls;
-using DynamicData;
-using Microsoft.VisualBasic;
 using NotepadAndExplorer.ViewModels.Page;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing.Text;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
 
 namespace NotepadAndExplorer.ViewModels
 {
@@ -23,9 +16,7 @@ namespace NotepadAndExplorer.ViewModels
         public ReactiveCommand<Unit, Unit> SwitchToSaveFileViewModel { get; }
         public MainWindowViewModel()
         {
-
             Content = notepadViewModel = new NotepadViewModel();
-
             SwitchToSaveFileViewModel = ReactiveCommand.Create(() =>
             {
                 OpenFileViewModel openFileViewModel = new OpenFileViewModel(1);
@@ -33,16 +24,17 @@ namespace NotepadAndExplorer.ViewModels
                 Observable.Merge(
                     openFileViewModel.OpenCommand,
                     openFileViewModel.CancelCommand).Subscribe(
-                    cringe =>
+                    returnedStr =>
                     {
-                        if (cringe == string.Empty)
+                        if (returnedStr == string.Empty)
                         {
                             Content = notepadViewModel;
                         }
-                        if (cringe != string.Empty && cringe != "#.#.#")
+                        if (returnedStr != string.Empty && returnedStr != "#.#.#")
                         {
                             string newFileText = FileText;
-                            File.WriteAllText(cringe, newFileText);
+                            File.WriteAllText(returnedStr, newFileText);
+                            Content = notepadViewModel;
                         }
                     }
                 );
@@ -53,14 +45,14 @@ namespace NotepadAndExplorer.ViewModels
                 Observable.Merge (
                     openFileViewModel.OpenCommand,
                     openFileViewModel.CancelCommand).Subscribe (
-                    cringe =>
+                    returnedStr =>
                         {
-                            if (cringe != "#.#.#" && cringe != string.Empty)
+                            if (returnedStr != "#.#.#" && returnedStr != string.Empty)
                             {
-                                FileText = cringe;
+                                FileText = returnedStr;
                                 Content = notepadViewModel;
                             }
-                            if (cringe == string.Empty)
+                            if (returnedStr == string.Empty)
                             {
                                 Content = notepadViewModel;
                             }
@@ -70,7 +62,6 @@ namespace NotepadAndExplorer.ViewModels
                 Content = openFileViewModel;
             });
         }
-
         public string FileText
         {
             get { return fileText; }
@@ -79,10 +70,7 @@ namespace NotepadAndExplorer.ViewModels
         public ViewModelBase Content
         {
             get { return content; }
-            set
-            {
-                this.RaiseAndSetIfChanged(ref content, value);
-            }
+            set { this.RaiseAndSetIfChanged(ref content, value); }
         }
     }
 }

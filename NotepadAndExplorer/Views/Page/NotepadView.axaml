@@ -6,7 +6,7 @@
              x:Class="NotepadAndExplorer.Views.Page.NotepadView">
 	
 	<Grid ColumnDefinitions="*" RowDefinitions="320, 80">
-		<TextBox Grid.Row="0" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding $parent[Window].DataContext.FileText}"/>
+		<TextBox Grid.Row="0" AcceptsReturn="True" Text="{Binding $parent[Window].DataContext.FileText}"/>
 		<StackPanel Grid.Row="1">
 			<Button Classes="B2" Content="Открыть" Command="{Binding $parent[Window].DataContext.SwitchToOpenFileViewModel}"/>
 			<Button Classes="B2" Content="Сохранить" Command="{Binding $parent[Window].DataContext.SwitchToSaveFileViewModel}"/>
