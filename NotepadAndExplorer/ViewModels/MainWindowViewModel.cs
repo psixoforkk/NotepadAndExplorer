@@ -26,7 +26,7 @@ namespace NotepadAndExplorer.ViewModels
                     openFileViewModel.CancelCommand).Subscribe(
                     returnedStr =>
                     {
-                        if (returnedStr == string.Empty)
+                        if (returnedStr == "#.#.#")
                         {
                             Content = notepadViewModel;
                         }
@@ -49,10 +49,18 @@ namespace NotepadAndExplorer.ViewModels
                         {
                             if (returnedStr != "#.#.#" && returnedStr != string.Empty)
                             {
-                                FileText = returnedStr;
+                                if (returnedStr == "#.#.#.")
+                                {
+                                    string changed = returnedStr.Remove(5, 1);
+                                    FileText = changed;
+                                }
+                                else
+                                {
+                                    FileText = returnedStr;
+                                }
                                 Content = notepadViewModel;
                             }
-                            if (returnedStr == string.Empty)
+                            if (returnedStr == "#.#.#")
                             {
                                 Content = notepadViewModel;
                             }

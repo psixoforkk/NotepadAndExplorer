@@ -1,4 +1,5 @@
-﻿using NotepadAndExplorer.Models;
+﻿using Avalonia.Interactivity;
+using NotepadAndExplorer.Models;
 using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
@@ -55,21 +56,33 @@ namespace NotepadAndExplorer.ViewModels.Page
                 if (SelectedFileEntity is FileV fileVvv && flag == 0)
                 {
                     FileText = File.ReadAllText(fileVvv.FullName);
+                    if (FileText == "#.#.#")
+                    {
+                        FileText += ".";
+                    }
                     return FileText;
                 }
                 if (SelectedFileEntity is FileV fileVvvv && flag == 1)
                 {
                     return fileVvvv.FullName;
                 }
-                if (SelectedFileEntity == null && flag == 1)
+                if (SelectedFileEntity == null && flag == 1 && FileNamePath != null)
                 {
                     return FileNamePath;
                 }
-                return "#.#.#";
+                if (SelectedFileEntity == null && flag == 0 && FileNamePath != null)
+                {
+                    if (File.Exists(FileNamePath))
+                    {
+                        FileText = File.ReadAllText(FileNamePath);
+                        return FileText;
+                    }
+                }
+                return string.Empty;
             });
             CancelCommand = ReactiveCommand.Create<Unit, string>(str =>
             {
-                return string.Empty;
+                return "#.#.#";
             });
 
         }
