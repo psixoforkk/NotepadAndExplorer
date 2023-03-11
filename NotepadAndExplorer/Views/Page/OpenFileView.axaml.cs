@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using NotepadAndExplorer.Models;
 using NotepadAndExplorer.ViewModels.Page;
@@ -12,6 +13,14 @@ namespace NotepadAndExplorer.Views.Page
         public OpenFileView()
         {
             InitializeComponent();
+        }
+
+        public void TextBoxChanged(object sender, RoutedEventArgs text)
+        {
+            if (DataContext is OpenFileViewModel openFileViewModel)
+            {
+                openFileViewModel.FileText = ((TextBox)sender).Text;
+            }
         }
         public void DoubleTapp(object sender, RoutedEventArgs args)
         {

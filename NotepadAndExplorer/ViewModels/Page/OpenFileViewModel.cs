@@ -16,19 +16,20 @@ namespace NotepadAndExplorer.ViewModels.Page
         public string fileText;
         public string fileNamePath;
         public int checkPage;
+        public int saveFlag = 1;
         public FileEntity selectedFileEntity;
         public ObservableCollection<FileEntity> dirAndFiles { get; set; } = new ObservableCollection<FileEntity>();
         public ReactiveCommand<Unit, string> OpenCommand { get; }
         public ReactiveCommand<Unit, string> CancelCommand { get; }
-        public OpenFileViewModel(int flag) 
+        public OpenFileViewModel(int flag)
         {
             FilePath = AppDomain.CurrentDomain.BaseDirectory;
             WriteToListBox();
             var parentDirInfo = Directory.GetParent(FilePath);
             FilePath = parentDirInfo.ToString();
             checkPage = flag;
-            OpenCommand = ReactiveCommand.Create<Unit, string>(str => 
-                {
+            OpenCommand = ReactiveCommand.Create<Unit, string>(str =>
+            {
                 if (SelectedFileEntity is DirectoryV dirV)
                 {
                     FilePath = dirV.FullName;
@@ -56,7 +57,7 @@ namespace NotepadAndExplorer.ViewModels.Page
                 if (SelectedFileEntity is FileV fileVvv && flag == 0)
                 {
                     FileText = File.ReadAllText(fileVvv.FullName);
-                    if (FileText == "#.#.#")
+                    if (FileText == "#.#.#" || FileText == "")
                     {
                         FileText += ".";
                     }
@@ -64,7 +65,7 @@ namespace NotepadAndExplorer.ViewModels.Page
                 }
                 if (SelectedFileEntity is FileV fileVvvv && flag == 1)
                 {
-                    return fileVvvv.FullName;
+                    return FileNamePath;
                 }
                 if (SelectedFileEntity == null && flag == 1 && FileNamePath != null)
                 {
@@ -92,8 +93,8 @@ namespace NotepadAndExplorer.ViewModels.Page
             set { this.RaiseAndSetIfChanged(ref fileNamePath, value); }
         }
         public string FileText
-        { 
-            get { return fileText;}
+        {
+            get { return fileText; }
             set { this.RaiseAndSetIfChanged(ref fileText, value); }
         }
         public string ButtonContent
@@ -106,13 +107,22 @@ namespace NotepadAndExplorer.ViewModels.Page
             get
             {
                 swap = selectedFileEntity;
-                if (swap is FileV && checkPage == 1)
+                if (swap is FileV && checkPage == 1 && saveFlag == 1)
                 {
                     FileNamePath = swap.Name;
                     ButtonContent = "Сохранить";
+                    saveFlag = 0;
                 }
                 else
                 {
+                    if (swap is FileV && checkPage == 0 && saveFlag == 0)
+                    {
+                        FileNamePath = swap.Name;
+                    }
+                    if (swap is DirectoryV && checkPage == 0 && saveFlag == 0)
+                    {
+                        FileNamePath = "";
+                    }
                     ButtonContent = "Открыть";
                 }
                 return selectedFileEntity;

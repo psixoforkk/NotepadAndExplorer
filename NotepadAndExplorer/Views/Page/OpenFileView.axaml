@@ -10,7 +10,7 @@
 	<UserControl.Resources>
 		<vm:BitmapAssetValueConverter x:Key="variableImage"/>
 	</UserControl.Resources>
-	
+
 	<UserControl.DataTemplates>
 		<DataTemplate DataType="{x:Type localM:FileEntity}">
 			<Grid ColumnDefinitions="20, 250">
@@ -25,7 +25,7 @@
 		<ListBox FontFamily="Comic Sans MS" Name="fileListBox" Grid.Row="0" Items="{Binding dirAndFiles}" SelectedItem="{Binding SelectedFileEntity}">
 		</ListBox>
 		<Grid Grid.Row="1" ColumnDefinitions="*, *" RowDefinitions="*, *">
-			<TextBox Name="fileTextBox" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding FileNamePath}"/>
+			<TextBox LostFocus="TextBoxChanged" Name="fileTextBox" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding FileNamePath}"/>
 			<Button FontFamily="Comic Sans MS" Name="okButton" Classes="B1" Grid.Column="0" Grid.Row="1" Content="{Binding ButtonContent}" Command="{Binding OpenCommand}"/>
 			<Button FontFamily="Comic Sans MS" Name="cancelButton" Classes="B1" Grid.Column="1" Grid.Row="1" Content="Отмена" Command="{Binding CancelCommand}" />
 		</Grid>

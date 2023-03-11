@@ -20,6 +20,7 @@ namespace NotepadAndExplorer.ViewModels
             SwitchToSaveFileViewModel = ReactiveCommand.Create(() =>
             {
                 OpenFileViewModel openFileViewModel = new OpenFileViewModel(1);
+                openFileViewModel.saveFlag = 1;
                 Content = openFileViewModel;
                 Observable.Merge(
                     openFileViewModel.OpenCommand,
@@ -42,30 +43,36 @@ namespace NotepadAndExplorer.ViewModels
             SwitchToOpenFileViewModel = ReactiveCommand.Create(() =>
             {
                 OpenFileViewModel openFileViewModel = new OpenFileViewModel(0);
-                Observable.Merge (
+                openFileViewModel.saveFlag = 0;
+                Observable.Merge(
                     openFileViewModel.OpenCommand,
-                    openFileViewModel.CancelCommand).Subscribe (
+                    openFileViewModel.CancelCommand).Subscribe(
                     returnedStr =>
+                    {
+                        if (returnedStr != "#.#.#" && returnedStr != string.Empty)
                         {
-                            if (returnedStr != "#.#.#" && returnedStr != string.Empty)
+                            if (returnedStr == ".")
                             {
-                                if (returnedStr == "#.#.#.")
-                                {
-                                    string changed = returnedStr.Remove(5, 1);
-                                    FileText = changed;
-                                }
-                                else
-                                {
-                                    FileText = returnedStr;
-                                }
-                                Content = notepadViewModel;
+                                returnedStr = "";
+                                FileText = returnedStr;
                             }
-                            if (returnedStr == "#.#.#")
+                            if (returnedStr == "#.#.#.")
                             {
-                                Content = notepadViewModel;
+                                string changed = returnedStr.Remove(5, 1);
+                                FileText = changed;
                             }
-
+                            else
+                            {
+                                FileText = returnedStr;
+                            }
+                            Content = notepadViewModel;
                         }
+                        if (returnedStr == "#.#.#")
+                        {
+                            Content = notepadViewModel;
+                        }
+
+                    }
                     );
                 Content = openFileViewModel;
             });
